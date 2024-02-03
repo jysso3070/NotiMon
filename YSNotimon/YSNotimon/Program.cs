@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 using YSNotimon;
 
@@ -7,7 +9,7 @@ namespace YSNotimon
 {
     class Program
     {
-        public static string ServiceName = "YSNotiService";
+        public static string ServiceName = "YSNotimon";
 
         static async Task Main(string[] args)
         {
@@ -16,31 +18,37 @@ namespace YSNotimon
                 // running as service
                 using (var service = new ServiceManager())
                 {
+                    ServiceBase.Run(service);
                 }
             }
             else
             {
-                Run();
+                ServiceMain();
             }
         }
 
-        public static void Run()
+        public static void ServiceMain()
         {
-            Console.WriteLine("Program Run");
+            Logger.LogI("ServiceMain");
 
-            // config load
-            ConfigManager cm = new ConfigManager();
-            cm.LoadConfig();
+            try
+            {
+                // config load
+                ConfigManager.LoadConfig();
 
-            // NotiList load
-            NotiListManager.LoadFromJson();
+                // NotiList load
+                NotiListManager.LoadFromJson();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogEx(ex);
+            }
 
             // Task
             var notiTasks = new List<Task>();
             var notiMon = new NotiMon();
 
             notiTasks.Add(notiMon.RunAsync());
-
             try
             {
                 // 여기서 메인스레드 블락킹

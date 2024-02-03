@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace YSNotimon
 {
@@ -14,7 +15,7 @@ namespace YSNotimon
         static string fileName = "log.log";
         static string filePath = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, @"\Log\log.log");
 
-        static bool consoleWrite = false;
+        static bool consoleWrite = true;
 
         public static void SetConsoleWrite(bool value)
         {
@@ -53,7 +54,7 @@ namespace YSNotimon
             if (string.IsNullOrEmpty(text) == true)
                 return;
 
-            string log = string.Format("[{0}]\n{1}\n", DateTime.Now.ToString(), text);
+            string log = string.Format("[{0}]\n{1}\n", DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), text);
 
             if (consoleWrite == true)
                 Console.WriteLine(log);
@@ -85,38 +86,34 @@ namespace YSNotimon
             }
         }
 
-        public static void Log(Exception e)
+        public static void LogI(string text)
+        {
+            if (string.IsNullOrEmpty(text) == true)
+                return;
+
+            string log = string.Format("[INFO] {0}", text);
+
+            Log(log);
+        }
+
+        public static void LogE(string text)
+        {
+            if (string.IsNullOrEmpty(text) == true)
+                return;
+
+            string log = string.Format("[ERROR] {0}", text);
+
+            Log(log);
+        }
+
+        public static void LogEx(Exception e)
         {
             if (string.IsNullOrEmpty(e.ToString()) == true)
                 return;
 
-            string log = string.Format("[{0}]\n{1}\n", DateTime.Now.ToString(), e);
+            string log = string.Format("[EXCEPTION] msg: {0}\nstack: {1}", e.Message, e.StackTrace);
 
-            if (Directory.Exists(directoryPath) == false)
-            {
-                lock (logLock)
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-            }
-
-            lock (logLock)
-            {
-                if (!File.Exists(filePath))
-                {
-                    using (StreamWriter sw = File.CreateText(filePath))
-                    {
-                        sw.WriteLine(log);
-                    }
-                }
-                else
-                {
-                    using (StreamWriter sw = File.AppendText(filePath))
-                    {
-                        sw.WriteLine(log);
-                    }
-                }
-            }
+            Log(log);
         }
     }
 }

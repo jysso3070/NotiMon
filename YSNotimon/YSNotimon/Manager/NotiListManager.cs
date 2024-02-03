@@ -24,10 +24,16 @@ namespace YSNotimon
 
         public static void LoadFromJson()
         {
-            string jsonData = File.ReadAllText("NotiList.json");
+
+            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            string notiListPath = Path.Combine(exePath, "NotiList.json");
+
+            string jsonData = File.ReadAllText(notiListPath);
 
             JObject jsonObject = JObject.Parse(jsonData);
             JToken jToken = jsonObject["List"];
+
+            var load = "ProductList: ";
 
             foreach (var data in jToken)
             {
@@ -40,11 +46,12 @@ namespace YSNotimon
                 info.MaxNotiCount = data.Value<int>("MaxNoti");
                 info.IsActive = data.Value<int>("Active") == 0 ? false : true;
                 info.CurrNotiCount = 0;
-                
-
 
                 CheckList[info.SiteName] = info;
+                load += info.ProductName + " ";
             }
+
+            Logger.LogI(load);
         }
     }
 }

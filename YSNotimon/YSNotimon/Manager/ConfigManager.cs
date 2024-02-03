@@ -26,13 +26,16 @@ namespace YSNotimon
         //    public string ChatId { get; set; }
         //}
 
-        public void LoadConfig()
+        public static void LoadConfig()
         {
+            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            string yamlPath = Path.Combine(exePath, "Config.yml");
             string yamlContent = "";
 
             try
             {
-                yamlContent = File.ReadAllText("Config.yml");
+                //yamlContent = File.ReadAllText("Config.yml");
+                yamlContent = File.ReadAllText(yamlPath);
             }
             catch (Exception e)
             {
@@ -50,10 +53,10 @@ namespace YSNotimon
             TelegramUrl = result["telegram"]["url"];
             TelegramBotToken = result["telegram"]["bottoken"];
             TelegramChatId = result["telegram"]["chatid"];
-            TelegramChatId = result["telegram"]["chatid"];
 
             NotiCount = Convert.ToInt32(result["constant"]["noticount"]);
-          
+
+            Logger.LogI("LoadConfig success");
         }
     }
 }

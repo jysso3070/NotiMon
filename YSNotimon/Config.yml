@@ -1,0 +1,6 @@
+telegram:
+         url: 'https://api.telegram.org'
+         bottoken: 'bot6611498875:AAGeMcHKt3ZQmNX3M7YZX9fWGqCR8KnZEys'
+         chatid: '-1002076782627'
+constant:
+        noticount: '5'

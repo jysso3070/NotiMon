@@ -33,7 +33,7 @@ namespace YSNotimon
             catch (HttpRequestException ex)
             {
                 // 예외가 발생한 경우 처리합니다.
-                Console.WriteLine($"HTTP request failed: {ex.Message}");
+                Logger.LogE($"HTTP request failed: {ex.Message}");
                 return null;
             }
         }

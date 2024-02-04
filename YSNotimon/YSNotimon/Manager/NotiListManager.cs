@@ -24,16 +24,12 @@ namespace YSNotimon
 
         public static void LoadFromJson()
         {
-
-            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            string notiListPath = Path.Combine(exePath, "NotiList.json");
-
+            string notiListPath = Path.Combine(Program.FilePath, "NotiList.json");
             string jsonData = File.ReadAllText(notiListPath);
+            var load = "ProductList:";
 
             JObject jsonObject = JObject.Parse(jsonData);
             JToken jToken = jsonObject["List"];
-
-            var load = "ProductList: ";
 
             foreach (var data in jToken)
             {

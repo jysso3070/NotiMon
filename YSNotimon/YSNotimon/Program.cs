@@ -10,12 +10,12 @@ namespace YSNotimon
     class Program
     {
         public static string ServiceName = "YSNotimon";
-
+        public static string FilePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
         static async Task Main(string[] args)
         {
             if (Environment.UserInteractive == false)
             {
-                // running as service
+                // service mode
                 using (var service = new ServiceManager())
                 {
                     ServiceBase.Run(service);
@@ -23,13 +23,20 @@ namespace YSNotimon
             }
             else
             {
-                ServiceMain();
+                try
+                {
+                    ServiceMain();
+                }
+                catch(Exception e)
+                {
+                    Logger.LogEx(e);
+                }
             }
         }
 
         public static void ServiceMain()
         {
-            Logger.LogI("ServiceMain");
+            Logger.LogI("Init Service Start");
 
             try
             {
@@ -38,27 +45,20 @@ namespace YSNotimon
 
                 // NotiList load
                 NotiListManager.LoadFromJson();
+
+                var notiTasks = new List<Task>();
+                var notiMon = new NotiMon();
+
+                notiTasks.Add(notiMon.RunAsync());
+
+                Task.WaitAll(notiTasks.ToArray());
             }
             catch (Exception ex)
             {
                 Logger.LogEx(ex);
-            }
 
-            // Task
-            var notiTasks = new List<Task>();
-            var notiMon = new NotiMon();
-
-            notiTasks.Add(notiMon.RunAsync());
-            try
-            {
-                // 여기서 메인스레드 블락킹
-                Task.WaitAll(notiTasks.ToArray());
+                Task.Run(() => TeleGramNotiManager.NotiAsync(string.Format("Notimon Exception Occurred!! \n{0}\n{1}", ex.Message, ex.StackTrace)).Wait());
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
         }
     }
 }

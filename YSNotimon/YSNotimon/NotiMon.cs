@@ -10,7 +10,7 @@ namespace YSNotimon
     class NotiMon
     {
         public static bool IsRunnig = true;
-        public static Int64 LastCheckHour;
+        public static int LastCheckHour;
 
         public NotiMon()
         {
@@ -20,18 +20,13 @@ namespace YSNotimon
         public async Task RunAsync()
         {
             Logger.LogI("Notimon Service Start");
-            await TeleGramNotiManager.NotiAsync("Notimon Service Start");
+            await TeleGramNotiManager.NotiAsync("Notimon Service On");
 
             while (IsRunnig)
             {
-                // 이제 여기서 크롤링한 결과를 분석해서 보낼지 말지 검증
-                // 주기도 여기서 정해보자 sleep 으로 하면 딜레이타임이 밀릴듯?
-                // 특정 시간대 마다 보내도록 하는게 좋을 거 같음.
-                // ex 매 시간 5분, 35 분 or 10분마다 한번씩?
-
                 var now = DateTime.Now;
 
-                if(now.Hour != LastCheckHour && now.Minute == 5)
+                if (now.Hour != LastCheckHour && now.Minute == 5)
                 {
                     Logger.LogI("Do Check");
 
@@ -65,7 +60,7 @@ namespace YSNotimon
                     LastCheckHour = now.Hour;
                 }
 
-                Thread.Sleep(20_000);
+                Thread.Sleep(2_000);
             }
         }
     }

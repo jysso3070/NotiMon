@@ -18,7 +18,6 @@ namespace YSNotimon
 
         protected override void OnStart(string[] args)
         {
-            // 서비스로 구동 할 때
             try
             {
                 NotiMon.IsRunnig = true;
@@ -34,12 +33,12 @@ namespace YSNotimon
 
         protected override void OnStop()
         {
-            // 종료 할 때
+            // 종료
             NotiMon.IsRunnig = false;
 
             Thread.Sleep(3000);
 
-            Task.Run(() => TeleGramNotiManager.NotiAsync("NotiService OFF")).Wait();
+            Task.Run(() => TeleGramNotiManager.NotiAsync("Notimon Service OFF")).Wait();
         }
 
     }

@@ -12,7 +12,6 @@ namespace YSNotimon
         public static string TelegramUrl { get; set; }
         public static string TelegramBotToken { get; set; }
         public static string TelegramChatId { get; set; }
-        public static int NotiCount { get; set; }
 
         //public class Config
         //{
@@ -28,19 +27,10 @@ namespace YSNotimon
 
         public static void LoadConfig()
         {
-            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            string yamlPath = Path.Combine(exePath, "Config.yml");
-            string yamlContent = "";
+            string yamlPath = Path.Combine(Program.FilePath, "Config.yml");
 
-            try
-            {
-                //yamlContent = File.ReadAllText("Config.yml");
-                yamlContent = File.ReadAllText(yamlPath);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            //yamlContent = File.ReadAllText("Config.yml");
+            string yamlContent = File.ReadAllText(yamlPath);
 
             //var deserializer = new DeserializerBuilder()
             //    .WithNamingConvention(CamelCaseNamingConvention.Instance)
@@ -53,8 +43,6 @@ namespace YSNotimon
             TelegramUrl = result["telegram"]["url"];
             TelegramBotToken = result["telegram"]["bottoken"];
             TelegramChatId = result["telegram"]["chatid"];
-
-            NotiCount = Convert.ToInt32(result["constant"]["noticount"]);
 
             Logger.LogI("LoadConfig success");
         }

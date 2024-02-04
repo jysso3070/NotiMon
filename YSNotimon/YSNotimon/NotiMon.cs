@@ -60,7 +60,7 @@ namespace YSNotimon
                     LastCheckHour = now.Hour;
                 }
 
-                Thread.Sleep(2_000);
+                Thread.Sleep(20_000);
             }
         }
     }
